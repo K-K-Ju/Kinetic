@@ -2,6 +2,7 @@
 ---
 This application should help developer teams organize their work by implementing **Agile** and **Waterfall** approaches. The idea is inspired by: [ClickUp](https://app.clickup.com/), [Jira](https://www.atlassian.com/software/jira).
 
+![logo](https://i.ibb.co/4S0sGQ9/Kinetic-logo.png)
 ---
 ## Features
 
