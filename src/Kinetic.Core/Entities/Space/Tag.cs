@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kinetic.Core.Entities
+namespace Kinetic.Core.Entities.Space
 {
     public class Tag
     {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Kinetic.Core.Entities
+namespace Kinetic.Core.Entities.Space
 {
     public class Role
     {
