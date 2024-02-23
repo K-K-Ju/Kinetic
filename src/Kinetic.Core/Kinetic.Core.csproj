@@ -32,12 +32,12 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Compile Include="Entities\Space\Space.cs" />
-    <Compile Include="Entities\Space\Role.cs" />
-    <Compile Include="Entities\Space\Tag.cs" />
-    <Compile Include="Entities\Space\Task.cs" />
+    <Compile Include="Entities\Restriction.cs" />
+    <Compile Include="Entities\Role.cs" />
+    <Compile Include="Entities\Space.cs" />
+    <Compile Include="Entities\Tag.cs" />
+    <Compile Include="Entities\Task.cs" />
     <Compile Include="Entities\User.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

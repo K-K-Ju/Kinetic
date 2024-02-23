@@ -264,3 +264,5 @@ Packages.props
 
 #Local Log Files
 log*.txt
+/src/Kinetic.Core/Entities/Space/Role.cs
+/src/Kinetic.Core/Entities/Space/Role.cs
