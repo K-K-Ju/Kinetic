@@ -33,11 +33,20 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Entities\Space\BackLog\Log.cs" />
+    <Compile Include="Entities\Space\BackLog\ParamChangeLog.cs" />
+    <Compile Include="Entities\Space\BackLog\SpaceBackLog.cs" />
+    <Compile Include="Entities\Space\SpaceUser.cs" />
+    <Compile Include="Entities\Space\TicketPriority.cs" />
+    <Compile Include="Entities\Space\PriorityRestriction.cs" />
+    <Compile Include="Entities\Space\TicketAction.cs" />
     <Compile Include="Entities\Space\Restriction.cs" />
     <Compile Include="Entities\Space\Role.cs" />
     <Compile Include="Entities\Space\Space.cs" />
     <Compile Include="Entities\Space\Tag.cs" />
-    <Compile Include="Entities\Space\Task.cs" />
+    <Compile Include="Entities\Space\TagRestriction.cs" />
+    <Compile Include="Entities\Space\TicketStateChangedEventArgs.cs" />
+    <Compile Include="Entities\Space\Ticket.cs" />
     <Compile Include="Entities\User.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

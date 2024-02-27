@@ -6,6 +6,6 @@ namespace Kinetic.Core.Entities.Space
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        ICollection<Restriction> Restrictions { get; set; }
+        ICollection<Restriction> Restrictions { get; } = new List<Restriction>();
     }
 }

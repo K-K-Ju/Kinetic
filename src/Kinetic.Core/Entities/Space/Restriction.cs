@@ -1,7 +1,9 @@
-﻿namespace Kinetic.Core.Entities.Space
+﻿using System.Collections.Generic;
+
+namespace Kinetic.Core.Entities.Space
 {
-    public class Restriction
+    public abstract class Restriction
     {
-        ///TODO: add fields
+        public ICollection<TicketAction> RestrictedTicketActions { get; set; } = new List<TicketAction>();
     }
 }
