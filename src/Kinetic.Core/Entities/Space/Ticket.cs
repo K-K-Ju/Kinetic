@@ -15,19 +15,19 @@ namespace Kinetic.Core.Entities.Space
             {
                 OnTicketStateChanged(this, new TicketStateChangedEventArgs() 
                 {
-                    TicketId = this.Id, 
-                    OldState = this.CurrentState, 
+                    TicketId = Id, 
+                    OldState = CurrentState, 
                     NewState = value
                 });
                 CurrentState = value;
             } 
         }
         public TicketPriority Priority { get; set; }
-        public virtual User Creator { get; set; }
+        public virtual SpaceUser Creator { get; set; }
         public int CreatorId { get; set; }
-        public virtual User AssignedTo { get; set; }
-        public IDictionary<State, DateTime> States { get; set; } ///TODO: optimize
-        public ICollection<Ticket> SubTasks { get; }
+        public virtual SpaceUser AssignedTo { get; set; }
+        public int AssignedToId { get; set; }
+        public ICollection<Ticket> SubTasks { get; } = new List<Ticket>();
 
         public event EventHandler<TicketStateChangedEventArgs> TicketStateChanged;
 

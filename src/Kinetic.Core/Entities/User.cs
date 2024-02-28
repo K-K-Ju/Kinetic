@@ -16,7 +16,7 @@ namespace Kinetic.Core.Entities
         public string Email { get; set; }
         public string PasswordHash { get; set; }
         
-        public ICollection<Space.Space> Spaces { get; set; }
-        public ICollection<User> Friends { get; set; }
+        public ICollection<Space.Space> Spaces { get; } = new List<Space.Space>();
+        public ICollection<User> Friends { get; } = new List<User>();
     }
 }

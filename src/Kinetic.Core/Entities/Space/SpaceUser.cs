@@ -10,8 +10,9 @@ namespace Kinetic.Core.Entities.Space
     {
         public int UserId { get; set; }
         public virtual Role UserRole { get; set; }
-        public int RoleId { get; set; }
+        public int UserRoleId { get; set; }
+        public Space Space { get; set; }
         public int SpaceId { get; set; }
-        public ICollection<Ticket> UserTckets { get; } = new List<Ticket>();
+        public ICollection<Ticket> AssignedTickets { get; } = new List<Ticket>();
     }
 }
