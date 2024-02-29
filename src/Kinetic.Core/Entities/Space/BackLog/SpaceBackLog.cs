@@ -8,8 +8,8 @@ namespace Kinetic.Core.Entities.Space.BackLog
     public class SpaceBackLog
     {
         public int Id { get; set; }
-        public Space ParentSpace { get; set; }
-        public int SpaceId { get; set; }
+        public virtual Space ParentSpace { get; set; }
+        public int ParentSpaceId { get; set; }
         public ICollection<Log> Logs { get; } = new List<Log>();
     }
 }

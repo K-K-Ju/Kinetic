@@ -1,14 +1,9 @@
-﻿using Kinetic.Core.Entities.Space;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace Kinetic.Core.Entities.Space
+﻿namespace Kinetic.Core.Entities.Space
 {
     public class SpaceUser
     {
-        public int UserId { get; set; }
+        public int Id { get; set; }
+        public User User { get; set; }
         public virtual Role UserRole { get; set; }
         public int UserRoleId { get; set; }
         public Space Space { get; set; }

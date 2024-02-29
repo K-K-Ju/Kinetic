@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Kinetic.Core.Entities.Space.Restritions;
+using Kinetic.Core.Entities.Space.Restrictions;
 
 namespace Kinetic.Core.Entities.Space
 {

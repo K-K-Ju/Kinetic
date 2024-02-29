@@ -1,7 +1,9 @@
 ﻿using Kinetic.Core.Entities.Space.BackLog;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Kinetic.Core.Entities.Space
 {
+    [NotMapped]
     public class TicketList : List<Ticket>
     {
         public Space Space { get; set; }
@@ -25,7 +27,8 @@ namespace Kinetic.Core.Entities.Space
             {
                 From = eventArgs.OldState,
                 To = eventArgs.NewState,
-                InitiatorId = eventArgs.InitiatorId
+                InitiatorId = eventArgs.InitiatorId,
+                ClassName = typeof(Ticket).Name,
             });
         }
     }
