@@ -1,7 +1,9 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Kinetic.Core.Entities.Space
 {
+    [NotMapped]
     public class TicketStateChangedEventArgs : EventArgs
     {
         public int InitiatorId { get; set; }

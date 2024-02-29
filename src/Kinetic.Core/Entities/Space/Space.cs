@@ -2,38 +2,22 @@
 
 namespace Kinetic.Core.Entities.Space
 {
-    public class Space
+    public partial class Space
     {
         public int Id { get; set; }
         public string Name { get; set; }
         public virtual User Owner { get; set; }
         public int OwnerId { get; set; }
-        public virtual SpaceBackLog SpaceBackLog { get; set; }
+        public virtual SpaceBackLog SpaceBackLog { get; set; } = new SpaceBackLog();
         public int SpaceBackLogId { get; set; }
         public TicketList Tickets { get; }
         public ICollection<Role> Roles { get; } = new List<Role>();
-        public ICollection<SpaceUser> SpaceUsers { get; }
+        public ICollection<SpaceUser> SpaceUsers { get; } = new List<SpaceUser>();
         public DateTime CreatedAt { get; set; }
 
         public Space()
         {
-            TicketList tickets = new TicketList(this);
-        }
-
-        public class TicketList : List<Ticket>
-        {
-            public Space space { get; set; }
-
-            public TicketList(Space space)
-            {
-                this.space = space;
-            }
-
-            public new void Add(Ticket ticket)
-            {
-                ticket.TicketStateChanged += space.SpaceBackLog.OnTicketStateChange; 
-                base.Add(ticket);
-            }
+            Tickets = new TicketList(this, SpaceBackLog);
         }
     }
 }

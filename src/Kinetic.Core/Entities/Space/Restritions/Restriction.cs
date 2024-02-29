@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Kinetic.Core.Entities.Space
+namespace Kinetic.Core.Entities.Space.Restritions
 {
     public abstract class Restriction
     {
