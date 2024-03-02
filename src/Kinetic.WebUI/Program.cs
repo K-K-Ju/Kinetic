@@ -14,7 +14,7 @@ namespace Kinetic.WebUI
             builder.Services.AddControllersWithViews();
 
             string? connectionString = builder.Configuration.GetConnectionString("LocalDbSqlServer");
-            builder.Services.AddStorage(connectionString != null ? connectionString : string.Empty);
+            builder.Services.AddStorage(connectionString ?? string.Empty);
 
             var app = builder.Build();
 
