@@ -1,4 +1,6 @@
 using Kinetic.Infrastructure.Data;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Kinetic.WebUI
 {
@@ -10,7 +12,9 @@ namespace Kinetic.WebUI
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
-            builder.Services.AddStorage(builder.Configuration);
+
+            string? connectionString = builder.Configuration.GetConnectionString("LocalDbSqlServer");
+            builder.Services.AddStorage(connectionString != null ? connectionString : string.Empty);
 
             var app = builder.Build();
 
@@ -23,6 +27,7 @@ namespace Kinetic.WebUI
             }
 
             await app.DataBaseEnsureCreated();
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
