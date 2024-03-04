@@ -1,14 +1,24 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Kinetic.Infrastructure.Data;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kinetic.WebUI.Controllers
 {
     public class HomeController : Controller
     {
+        private KineticDbContext _dbContext;
+        
+        public HomeController(KineticDbContext dbContext)
+        {
+            _dbContext = dbContext;
+        }
+
         // GET: IndexController
         public ActionResult Index()
         {
-            return View();
+            var users = _dbContext.Users.OrderBy(u => u.FirstName).ToList();
+            //ViewData["Users"] = users;
+            return View(users);
         }
 
         // GET: IndexController/Details/5

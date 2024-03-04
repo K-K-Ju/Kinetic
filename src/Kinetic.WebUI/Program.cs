@@ -1,6 +1,4 @@
 using Kinetic.Infrastructure.Data;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Kinetic.WebUI
 {
