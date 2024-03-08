@@ -1,4 +1,8 @@
 using Kinetic.Infrastructure.Data;
+using Kinetic.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Kinetic.WebUI
 {
@@ -7,22 +11,37 @@ namespace Kinetic.WebUI
         public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
-            // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            var services = builder.Services;
 
             string? connectionString = builder.Configuration.GetConnectionString("LocalDbSqlServer");
-            builder.Services.AddStorage(connectionString ?? string.Empty);
+
+            //services.AddDbContext<KineticDbContext>(options => options.UseSqlServer(connectionString));
+            
+
+            services.AddDbContext<UserIdentityDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString, sqloptions =>
+                {
+                    sqloptions.MigrationsHistoryTable(HistoryRepository.DefaultTableName, UserIdentityDbContext.Schema);
+                });
+            });
+
+            services.AddStorage(connectionString ?? string.Empty);
+
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddEntityFrameworkStores<UserIdentityDbContext>();
+
+            services.AddControllersWithViews();
 
             var app = builder.Build();
 
-            // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+            else
+            { }
 
             await app.DataBaseEnsureCreated();
 
@@ -33,9 +52,16 @@ namespace Kinetic.WebUI
 
             app.UseAuthorization();
 
+            app.MapRazorPages();
+
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
+
+            //app.Map("/login", async (AuthenticationService authService, IHttpContextAccessor httpContextAccessor) =>
+            //{
+            //    await authService.SignInAsync(new ClaimsPrincipal());
+            //});
 
             app.Run();
         }

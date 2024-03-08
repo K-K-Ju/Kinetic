@@ -1,0 +1,10 @@
+﻿@using Kinetic.Core.Entities.Space;
+@{
+    ViewData["Title"] = "Home Page";
+}
+@model Space
+
+@await Component.InvokeAsync("TicketList", Model.Id);
+<div>
+
+</div>

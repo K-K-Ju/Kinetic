@@ -1,0 +1,31 @@
+﻿@using Kinetic.Core.Entities.Space
+@{
+    ViewData["Title"] = "Home Page";
+}
+@model IEnumerable<Ticket>
+
+<div class="list-group">
+
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">First</th>
+            <th scope="col">Last</th>
+            <th scope="col">Handle</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Ticket ticket in Model)
+        {
+            <tr>
+                <th scope="row">@ticket.Id</th>
+                <td>@ticket.Title</td>
+                <td>@ticket.CurrentState</td>
+                <td>@ticket.Creator</td>
+            </tr>
+        }
+    </tbody>
+</table>
+

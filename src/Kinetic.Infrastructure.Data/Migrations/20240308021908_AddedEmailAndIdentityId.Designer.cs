@@ -12,14 +12,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Kinetic.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(KineticDbContext))]
-    [Migration("20240229235430_Initial")]
-    partial class Initial
+    [Migration("20240308021908_AddedEmailAndIdentityId")]
+    partial class AddedEmailAndIdentityId
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("application")
                 .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
@@ -46,7 +47,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
 
                     b.HasIndex("SpaceBackLogId");
 
-                    b.ToTable("Logs");
+                    b.ToTable("Logs", "application");
                 });
 
             modelBuilder.Entity("Kinetic.Core.Entities.Space.BackLog.SpaceBackLog", b =>
@@ -62,7 +63,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("SpaceBackLogs");
+                    b.ToTable("SpaceBackLogs", "application");
                 });
 
             modelBuilder.Entity("Kinetic.Core.Entities.Space.Restrictions.Restriction", b =>
@@ -89,7 +90,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Restrictions");
+                    b.ToTable("Restrictions", "application");
 
                     b.HasDiscriminator<string>("Discriminator").HasValue("Restriction");
 
@@ -115,7 +116,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
 
                     b.HasIndex("SpaceId");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", "application");
                 });
 
             modelBuilder.Entity("Kinetic.Core.Entities.Space.Space", b =>
@@ -148,7 +149,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     b.HasIndex("SpaceBackLogId")
                         .IsUnique();
 
-                    b.ToTable("Spaces");
+                    b.ToTable("Spaces", "application");
                 });
 
             modelBuilder.Entity("Kinetic.Core.Entities.Space.SpaceUser", b =>
@@ -169,7 +170,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     b.HasIndex("UserRoleId")
                         .IsUnique();
 
-                    b.ToTable("SpaceUsers");
+                    b.ToTable("SpaceUsers", "application");
                 });
 
             modelBuilder.Entity("Kinetic.Core.Entities.Space.Tag", b =>
@@ -184,7 +185,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
 
                     b.HasIndex("TicketId");
 
-                    b.ToTable("Tags");
+                    b.ToTable("Tags", "application");
                 });
 
             modelBuilder.Entity("Kinetic.Core.Entities.Space.Ticket", b =>
@@ -231,7 +232,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
 
                     b.HasIndex("TicketId");
 
-                    b.ToTable("Tickets");
+                    b.ToTable("Tickets", "application");
                 });
 
             modelBuilder.Entity("Kinetic.Core.Entities.User", b =>
@@ -250,21 +251,17 @@ namespace Kinetic.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("IdentityId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ViewName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", "application");
                 });
 
             modelBuilder.Entity("Kinetic.Core.Entities.Space.Restrictions.PriorityRestriction", b =>

@@ -11,8 +11,12 @@ namespace Kinetic.Infrastructure.Data.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "application");
+
             migrationBuilder.CreateTable(
                 name: "SpaceBackLogs",
+                schema: "application",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -26,15 +30,13 @@ namespace Kinetic.Infrastructure.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Users",
+                schema: "application",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ViewName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    PasswordHash = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -43,6 +45,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Logs",
+                schema: "application",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -57,6 +60,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Logs_SpaceBackLogs_SpaceBackLogId",
                         column: x => x.SpaceBackLogId,
+                        principalSchema: "application",
                         principalTable: "SpaceBackLogs",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -64,6 +68,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Spaces",
+                schema: "application",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -79,17 +84,20 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Spaces_SpaceBackLogs_SpaceBackLogId",
                         column: x => x.SpaceBackLogId,
+                        principalSchema: "application",
                         principalTable: "SpaceBackLogs",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Spaces_Users_OwnerId",
                         column: x => x.OwnerId,
+                        principalSchema: "application",
                         principalTable: "Users",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Roles",
+                schema: "application",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -103,12 +111,14 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Roles_Spaces_SpaceId",
                         column: x => x.SpaceId,
+                        principalSchema: "application",
                         principalTable: "Spaces",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "SpaceUsers",
+                schema: "application",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
@@ -121,17 +131,20 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     table.ForeignKey(
                         name: "FK_SpaceUsers_Roles_UserRoleId",
                         column: x => x.UserRoleId,
+                        principalSchema: "application",
                         principalTable: "Roles",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_SpaceUsers_Spaces_SpaceId",
                         column: x => x.SpaceId,
+                        principalSchema: "application",
                         principalTable: "Spaces",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_SpaceUsers_Users_Id",
                         column: x => x.Id,
+                        principalSchema: "application",
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -139,6 +152,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Tickets",
+                schema: "application",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -158,27 +172,32 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Tickets_SpaceUsers_AssignedToId",
                         column: x => x.AssignedToId,
+                        principalSchema: "application",
                         principalTable: "SpaceUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Tickets_SpaceUsers_CreatorId",
                         column: x => x.CreatorId,
+                        principalSchema: "application",
                         principalTable: "SpaceUsers",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Tickets_Spaces_SpaceId",
                         column: x => x.SpaceId,
+                        principalSchema: "application",
                         principalTable: "Spaces",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Tickets_Tickets_TicketId",
                         column: x => x.TicketId,
+                        principalSchema: "application",
                         principalTable: "Tickets",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Tags",
+                schema: "application",
                 columns: table => new
                 {
                     Name = table.Column<string>(type: "nvarchar(450)", nullable: false),
@@ -190,12 +209,14 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Tags_Tickets_TicketId",
                         column: x => x.TicketId,
+                        principalSchema: "application",
                         principalTable: "Tickets",
                         principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Restrictions",
+                schema: "application",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -212,11 +233,13 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     table.ForeignKey(
                         name: "FK_Restrictions_Roles_RoleId",
                         column: x => x.RoleId,
+                        principalSchema: "application",
                         principalTable: "Roles",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Restrictions_Tags_TagName",
                         column: x => x.TagName,
+                        principalSchema: "application",
                         principalTable: "Tags",
                         principalColumn: "Name",
                         onDelete: ReferentialAction.Cascade);
@@ -224,68 +247,81 @@ namespace Kinetic.Infrastructure.Data.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_Logs_SpaceBackLogId",
+                schema: "application",
                 table: "Logs",
                 column: "SpaceBackLogId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Restrictions_RoleId",
+                schema: "application",
                 table: "Restrictions",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Restrictions_TagName",
+                schema: "application",
                 table: "Restrictions",
                 column: "TagName");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Roles_SpaceId",
+                schema: "application",
                 table: "Roles",
                 column: "SpaceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Spaces_OwnerId",
+                schema: "application",
                 table: "Spaces",
                 column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Spaces_SpaceBackLogId",
+                schema: "application",
                 table: "Spaces",
                 column: "SpaceBackLogId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_SpaceUsers_SpaceId",
+                schema: "application",
                 table: "SpaceUsers",
                 column: "SpaceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SpaceUsers_UserRoleId",
+                schema: "application",
                 table: "SpaceUsers",
                 column: "UserRoleId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tags_TicketId",
+                schema: "application",
                 table: "Tags",
                 column: "TicketId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_AssignedToId",
+                schema: "application",
                 table: "Tickets",
                 column: "AssignedToId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_CreatorId",
+                schema: "application",
                 table: "Tickets",
                 column: "CreatorId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_SpaceId",
+                schema: "application",
                 table: "Tickets",
                 column: "SpaceId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tickets_TicketId",
+                schema: "application",
                 table: "Tickets",
                 column: "TicketId");
         }
@@ -294,31 +330,40 @@ namespace Kinetic.Infrastructure.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Logs");
+                name: "Logs",
+                schema: "application");
 
             migrationBuilder.DropTable(
-                name: "Restrictions");
+                name: "Restrictions",
+                schema: "application");
 
             migrationBuilder.DropTable(
-                name: "Tags");
+                name: "Tags",
+                schema: "application");
 
             migrationBuilder.DropTable(
-                name: "Tickets");
+                name: "Tickets",
+                schema: "application");
 
             migrationBuilder.DropTable(
-                name: "SpaceUsers");
+                name: "SpaceUsers",
+                schema: "application");
 
             migrationBuilder.DropTable(
-                name: "Roles");
+                name: "Roles",
+                schema: "application");
 
             migrationBuilder.DropTable(
-                name: "Spaces");
+                name: "Spaces",
+                schema: "application");
 
             migrationBuilder.DropTable(
-                name: "SpaceBackLogs");
+                name: "SpaceBackLogs",
+                schema: "application");
 
             migrationBuilder.DropTable(
-                name: "Users");
+                name: "Users",
+                schema: "application");
         }
     }
 }

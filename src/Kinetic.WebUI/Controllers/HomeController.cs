@@ -6,7 +6,7 @@ namespace Kinetic.WebUI.Controllers
 {
     public class HomeController : Controller
     {
-        private KineticDbContext _dbContext;
+        private readonly KineticDbContext _dbContext;
         
         public HomeController(KineticDbContext dbContext)
         {
@@ -16,9 +16,8 @@ namespace Kinetic.WebUI.Controllers
         // GET: IndexController
         public ActionResult Index()
         {
-            var users = _dbContext.Users.OrderBy(u => u.FirstName).ToList();
-            //ViewData["Users"] = users;
-            return View(users);
+            var spaces = _dbContext.Spaces.OrderBy(u => u.Name).ToList();
+            return View(spaces);
         }
 
         // GET: IndexController/Details/5

@@ -29,8 +29,9 @@ namespace Kinetic.Infrastructure.Data.EntityMappingConfiguration
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder
-                .HasMany<Ticket>()
-                .WithOne(x => x.AssignedTo);
+                .HasMany(su => su.AssignedTickets)
+                .WithOne(x => x.AssignedTo)
+                .IsRequired(false);
 
             builder
                 .HasOne(x => x.UserRole)

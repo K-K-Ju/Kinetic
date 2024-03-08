@@ -1,14 +1,14 @@
-﻿@using Kinetic.Core.Entities;
+﻿@using Kinetic.Core.Entities.Space;
 @{
     ViewData["Title"] = "Home Page";
 }
-@model IEnumerable<User>
+@model IEnumerable<Space>
 
-<div class="text-center">
+<div class="">
     <ul>
         @foreach(var space in Model)
         {
-            <li>@space.FirstName</li>
+            <li>@space.Name</li>
         }
     </ul>
 </div>

@@ -8,7 +8,7 @@ namespace Kinetic.Infrastructure.Data
 {
     public class KineticDbContext : DbContext
     {
-        public KineticDbContext(DbContextOptions options) : base(options) { }
+        public KineticDbContext(DbContextOptions<KineticDbContext> options) : base(options) { }
         public KineticDbContext() { }
 
         public DbSet<Role> Roles { get; set; }
@@ -25,6 +25,7 @@ namespace Kinetic.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.HasDefaultSchema("application");
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(KineticDbContext).Assembly);
 
             base.OnModelCreating(modelBuilder);
