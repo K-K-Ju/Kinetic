@@ -365,8 +365,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     b.HasOne("Kinetic.Core.Entities.Space.SpaceUser", "AssignedTo")
                         .WithMany("AssignedTickets")
                         .HasForeignKey("AssignedToId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Kinetic.Core.Entities.Space.SpaceUser", "Creator")
                         .WithMany()

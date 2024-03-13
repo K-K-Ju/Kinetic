@@ -30,8 +30,9 @@ namespace Kinetic.Infrastructure.Data.EntityMappingConfiguration
 
             builder
                 .HasMany(su => su.AssignedTickets)
-                .WithOne(x => x.AssignedTo)
-                .IsRequired(false);
+                .WithOne(t => t.AssignedTo)
+                .IsRequired(false)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder
                 .HasOne(x => x.UserRole)

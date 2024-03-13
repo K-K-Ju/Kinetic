@@ -14,6 +14,10 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using Kinetic.Infrastructure.Data;
+using System.Security.Claims;
+using System.Security.Principal;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace Kinetic.WebUI.Areas.Identity.Pages.Account
 {
@@ -21,12 +25,16 @@ namespace Kinetic.WebUI.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly KineticDbContext _dbContext;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, KineticDbContext dbContext)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _dbContext = dbContext;
         }
+
+
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -106,7 +114,6 @@ namespace Kinetic.WebUI.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
-
             if (ModelState.IsValid)
             {
                 // This doesn't count login failures towards account lockout
@@ -114,6 +121,24 @@ namespace Kinetic.WebUI.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
+                    var identityUserId = HttpContext.User.Claims
+                        .Where(c => c.Type == ClaimTypes.NameIdentifier)
+                        .First()
+                        .Value;
+
+                    var userId = _dbContext.Users
+                        .Where(u => u.IdentityId == identityUserId)
+                        .FirstOrDefault()
+                        .Id;
+
+                    var principal = HttpContext.User;
+                    var claims = principal.Claims.ToList();
+
+                    claims.Add(new Claim("user_id", userId.ToString()));
+
+                    await HttpContext.SignInAsync(principal);
+                    //HttpContext.User.AddIdentity(claimsIdentity);
+
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }

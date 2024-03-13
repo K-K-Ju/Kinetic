@@ -1,8 +1,11 @@
 using Kinetic.Infrastructure.Data;
 using Kinetic.Infrastructure.Identity;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Blazor;
+using Kinetic.WebUI;
 
 namespace Kinetic.WebUI
 {
@@ -15,21 +18,19 @@ namespace Kinetic.WebUI
 
             string? connectionString = builder.Configuration.GetConnectionString("LocalDbSqlServer");
 
-            //services.AddDbContext<KineticDbContext>(options => options.UseSqlServer(connectionString));
-            
-
-            services.AddDbContext<UserIdentityDbContext>(options =>
-            {
-                options.UseSqlServer(connectionString, sqloptions =>
-                {
-                    sqloptions.MigrationsHistoryTable(HistoryRepository.DefaultTableName, UserIdentityDbContext.Schema);
-                });
-            });
-
+            services.AddHttpContextAccessor();
             services.AddStorage(connectionString ?? string.Empty);
+            services.AddIdentityStorage(connectionString ?? string.Empty);
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<UserIdentityDbContext>();
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            })
+                .AddCookie();
 
             services.AddControllersWithViews();
 
@@ -43,7 +44,7 @@ namespace Kinetic.WebUI
             else
             { }
 
-            await app.DataBaseEnsureCreated();
+            await app.PrepareDataBaseAsync();
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
@@ -51,19 +52,15 @@ namespace Kinetic.WebUI
             app.UseRouting();
 
             app.UseAuthorization();
-
             app.MapRazorPages();
 
             app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
-            //app.Map("/login", async (AuthenticationService authService, IHttpContextAccessor httpContextAccessor) =>
-            //{
-            //    await authService.SignInAsync(new ClaimsPrincipal());
-            //});
-
+            await app.SeedTestDataAsync();
             app.Run();
+
         }
     }
 }

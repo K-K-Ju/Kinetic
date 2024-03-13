@@ -15,5 +15,16 @@ namespace Kinetic.Infrastructure.Data
                 options.UseSqlServer(connectionString);
             });
         }
+        public static void AddIdentityStorage(this IServiceCollection serviceCollection, string connectionString)
+        {
+            serviceCollection.AddDbContext<UserIdentityDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString, sqloptions =>
+                {
+                    sqloptions.MigrationsHistoryTable(HistoryRepository.DefaultTableName, UserIdentityDbContext.Schema);
+                });
+            });
+        }
+
     }
 }

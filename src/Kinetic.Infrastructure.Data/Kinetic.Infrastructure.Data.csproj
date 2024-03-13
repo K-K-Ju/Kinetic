@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.2">
       <PrivateAssets>all</PrivateAssets>
@@ -20,6 +19,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Kinetic.Core\Kinetic.Core.csproj" />
+    <ProjectReference Include="..\Kinetic.Infrastructure.Identity\Kinetic.Infrastructure.Identity.csproj" />
   </ItemGroup>
 
 </Project>

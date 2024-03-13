@@ -1,9 +1,11 @@
 ﻿using Kinetic.Infrastructure.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Kinetic.WebUI.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         private readonly KineticDbContext _dbContext;
@@ -16,8 +18,16 @@ namespace Kinetic.WebUI.Controllers
         // GET: IndexController
         public ActionResult Index()
         {
-            var spaces = _dbContext.Spaces.OrderBy(u => u.Name).ToList();
-            return View(spaces);
+            var identityUserId = HttpContext.User.Claims
+                .Where(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
+                .First()
+                .Value;
+
+            var user = _dbContext.Users
+                .Where(u => u.IdentityId == identityUserId)
+                .FirstOrDefault();
+
+            return View(user);
         }
 
         // GET: IndexController/Details/5

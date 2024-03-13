@@ -17,12 +17,12 @@ namespace Kinetic.Infrastructure.Data.EntityMappingConfiguration
                 .IsRequired()
                 .OnDelete(DeleteBehavior.NoAction);
 
-            builder
-                .HasOne(x => x.AssignedTo)
-                .WithMany(x => x.AssignedTickets)
-                .HasForeignKey(x => x.AssignedToId)
-                .IsRequired()
-                .OnDelete(DeleteBehavior.NoAction);
+            //builder
+            //    .HasOne(x => x.AssignedTo)
+            //    .WithMany(x => x.AssignedTickets)
+            //    .HasForeignKey(x => x.AssignedToId)
+            //    .IsRequired()
+            //    .OnDelete(DeleteBehavior.NoAction);
 
             builder
                 .HasMany(x => x.SubTasks)

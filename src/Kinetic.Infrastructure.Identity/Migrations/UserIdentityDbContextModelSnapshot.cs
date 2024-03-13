@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Kinetic.Infrastructure.Data.Migrations.UserIdentityDb
+namespace Kinetic.Infrastructure.Identity.Migrations
 {
     [DbContext(typeof(UserIdentityDbContext))]
     partial class UserIdentityDbContextModelSnapshot : ModelSnapshot

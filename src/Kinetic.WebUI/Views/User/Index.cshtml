@@ -1,0 +1,15 @@
+﻿@using Kinetic.Core.Entities;
+@{
+    ViewData["Title"] = "Home Page";
+}
+@model User
+
+<div class="">
+    <ul>
+        <li>Email: @Model.Email</li>
+        <li>Identity id: @Model.IdentityId</li>
+        <li>First name: @Model.FirstName</li>
+        <li>Last name: @Model.LastName</li>
+    </ul>
+    <a class="nav-link text-dark" asp-controller="User" asp-action="Edit">Edit</a>
+</div>

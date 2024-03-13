@@ -9,10 +9,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace Kinetic.Infrastructure.Data.Migrations.UserIdentityDb
+namespace Kinetic.Infrastructure.Identity.Migrations
 {
     [DbContext(typeof(UserIdentityDbContext))]
-    [Migration("20240308015901_Initial")]
+    [Migration("20240310001813_Initial")]
     partial class Initial
     {
         /// <inheritdoc />

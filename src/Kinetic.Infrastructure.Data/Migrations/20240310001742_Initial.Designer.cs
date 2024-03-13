@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Kinetic.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(KineticDbContext))]
-    [Migration("20240308021908_AddedEmailAndIdentityId")]
-    partial class AddedEmailAndIdentityId
+    [Migration("20240310001742_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -368,8 +368,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     b.HasOne("Kinetic.Core.Entities.Space.SpaceUser", "AssignedTo")
                         .WithMany("AssignedTickets")
                         .HasForeignKey("AssignedToId")
-                        .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Kinetic.Core.Entities.Space.SpaceUser", "Creator")
                         .WithMany()

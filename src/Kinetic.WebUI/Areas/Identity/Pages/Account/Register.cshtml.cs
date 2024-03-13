@@ -5,19 +5,18 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Text.Encodings.Web;
-using System.Threading;
-using System.Threading.Tasks;
+using Kinetic.Core.Entities;
+using Kinetic.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.Extensions.Logging;
 
 namespace Kinetic.WebUI.Areas.Identity.Pages.Account
 {
@@ -29,13 +28,15 @@ namespace Kinetic.WebUI.Areas.Identity.Pages.Account
         private readonly IUserEmailStore<IdentityUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
+        private readonly KineticDbContext _dbContext;
 
         public RegisterModel(
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            IEmailSender emailSender,
+            KineticDbContext dbContext)
         {
             _userManager = userManager;
             _userStore = userStore;
@@ -43,6 +44,7 @@ namespace Kinetic.WebUI.Areas.Identity.Pages.Account
             _signInManager = signInManager;
             _logger = logger;
             _emailSender = emailSender;
+            _dbContext = dbContext;
         }
 
         /// <summary>
@@ -112,23 +114,27 @@ namespace Kinetic.WebUI.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
+                (IdentityUser identityUser, User user) = CreateUser();
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                await _userStore.SetUserNameAsync(identityUser, Input.Email, CancellationToken.None);
+                await _emailStore.SetEmailAsync(identityUser, Input.Email, CancellationToken.None);
+                var result = await _userManager.CreateAsync(identityUser, Input.Password);
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var identityUserId = await _userManager.GetUserIdAsync(identityUser);
+                    user.IdentityId = identityUserId;
+                    user.Email = identityUser.Email;
+                    _dbContext.Users.Add(user);
+                    await _dbContext.SaveChangesAsync();
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(identityUser);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
                         "/Account/ConfirmEmail",
                         pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
+                        values: new { area = "Identity", userId = identityUserId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
                     await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
@@ -140,7 +146,7 @@ namespace Kinetic.WebUI.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
+                        await _signInManager.SignInAsync(identityUser, isPersistent: false);
                         return LocalRedirect(returnUrl);
                     }
                 }
@@ -154,11 +160,11 @@ namespace Kinetic.WebUI.Areas.Identity.Pages.Account
             return Page();
         }
 
-        private IdentityUser CreateUser()
+        private (IdentityUser, User) CreateUser()
         {
             try
             {
-                return Activator.CreateInstance<IdentityUser>();
+                return (Activator.CreateInstance<IdentityUser>(), new User());
             }
             catch
             {
