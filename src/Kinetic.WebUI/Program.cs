@@ -22,6 +22,7 @@ namespace Kinetic.WebUI
             services.AddStorage(connectionString ?? string.Empty);
             services.AddIdentityStorage(connectionString ?? string.Empty);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddAutoMapper(typeof(MapperProfile));
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<UserIdentityDbContext>();
