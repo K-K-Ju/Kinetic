@@ -25,13 +25,14 @@ namespace Kinetic.WebUI
             services.AddAutoMapper(typeof(MapperProfile));
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                
                 .AddEntityFrameworkStores<UserIdentityDbContext>();
 
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            })
-                .AddCookie();
+            //services.AddAuthentication(options =>
+            //{
+            //    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+            //})
+            //    .AddCookie();
 
             services.AddControllersWithViews();
 

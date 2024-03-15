@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Kinetic.Core.Entities.Space;
 using Kinetic.Infrastructure.Data;
@@ -16,12 +11,12 @@ namespace Kinetic.WebUI.Controllers
     [ApiController]
     public class TicketsController : ControllerBase
     {
-        private readonly KineticDbContext _context;
+        private readonly KineticDbContext _dbContext;
         private readonly IMapper _mapper;
 
         public TicketsController(KineticDbContext context, IMapper mapper)
         {
-            _context = context;
+            _dbContext = context;
             _mapper = mapper;
         }
 
@@ -29,7 +24,7 @@ namespace Kinetic.WebUI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTickets()
         {
-            var tickets = await _context.Tickets.ToListAsync();
+            var tickets = await _dbContext.Tickets.ToListAsync();
             var ticketsDTO = _mapper.Map<List<Ticket>, List<TicketDTO>>(tickets);
             
             return Ok(ticketsDTO);
@@ -39,7 +34,7 @@ namespace Kinetic.WebUI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<TicketDTO>> GetTicket(int id)
         {
-            var ticket = await _context.Tickets.FindAsync(id);
+            var ticket = await _dbContext.Tickets.FindAsync(id);
 
             if (ticket == null)
             {
@@ -60,13 +55,16 @@ namespace Kinetic.WebUI.Controllers
             {
                 return BadRequest();
             }
+            
+            var ticket = _dbContext.Tickets.Find(id);
 
-            _context.Entry(ticketDTO).State = EntityState.Modified;
+            _dbContext.Entry(ticket).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync();
             }
+
             catch (DbUpdateConcurrencyException)
             {
                 if (!TicketExists(id))
@@ -88,8 +86,8 @@ namespace Kinetic.WebUI.Controllers
         public async Task<ActionResult<TicketDTO>> PostTicket(TicketDTO ticketDTO)
         {
             var ticket = _mapper.Map<Ticket>(ticketDTO);
-            _context.Tickets.Add(ticket);
-            await _context.SaveChangesAsync();
+            _dbContext.Tickets.Add(ticket);
+            await _dbContext.SaveChangesAsync();
 
             return CreatedAtAction("GetTicket", new { id = ticketDTO.Id }, ticketDTO);
         }
@@ -98,21 +96,21 @@ namespace Kinetic.WebUI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTicket(int id)
         {
-            var ticket = await _context.Tickets.FindAsync(id);
+            var ticket = await _dbContext.Tickets.FindAsync(id);
             if (ticket == null)
             {
                 return NotFound();
             }
 
-            _context.Tickets.Remove(ticket);
-            await _context.SaveChangesAsync();
+            _dbContext.Tickets.Remove(ticket);
+            await _dbContext.SaveChangesAsync();
 
             return NoContent();
         }
 
         private bool TicketExists(int id)
         {
-            return _context.Tickets.Any(e => e.Id == id);
+            return _dbContext.Tickets.Any(e => e.Id == id);
         }
     }
 }

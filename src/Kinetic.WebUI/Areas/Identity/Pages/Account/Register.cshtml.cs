@@ -129,6 +129,7 @@ namespace Kinetic.WebUI.Areas.Identity.Pages.Account
                     user.Email = identityUser.Email;
                     _dbContext.Users.Add(user);
                     await _dbContext.SaveChangesAsync();
+
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(identityUser);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(

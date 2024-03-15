@@ -83,8 +83,6 @@ namespace Kinetic.Infrastructure.Data
 
                 space.SpaceUsers.Add(spaceUser);
 
-                await dbContext.SaveChangesAsync();
-
                 Ticket ticket = new Ticket()
                 {
                     Title = "TestTicket",

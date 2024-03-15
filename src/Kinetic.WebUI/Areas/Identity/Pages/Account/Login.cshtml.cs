@@ -121,24 +121,6 @@ namespace Kinetic.WebUI.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                    var identityUserId = HttpContext.User.Claims
-                        .Where(c => c.Type == ClaimTypes.NameIdentifier)
-                        .First()
-                        .Value;
-
-                    var userId = _dbContext.Users
-                        .Where(u => u.IdentityId == identityUserId)
-                        .FirstOrDefault()
-                        .Id;
-
-                    var principal = HttpContext.User;
-                    var claims = principal.Claims.ToList();
-
-                    claims.Add(new Claim("user_id", userId.ToString()));
-
-                    await HttpContext.SignInAsync(principal);
-                    //HttpContext.User.AddIdentity(claimsIdentity);
-
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }

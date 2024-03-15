@@ -8,20 +8,31 @@ namespace Kinetic.WebUI.Controllers
     public class UserController : Controller
     {
         private readonly KineticDbContext _dbContext;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(KineticDbContext dbContext)
+        public UserController(KineticDbContext dbContext, ILogger<UserController> logger)
         {
             _dbContext = dbContext;
+            _logger = logger;
         }
 
         [Authorize]
         public IActionResult Index()
         {
-            string userId = HttpContext.User.FindFirst(c => c.ValueType == "user_id").Value;
+            string identityUserEmail = HttpContext.User.Claims
+                .Where(c => c.Type == ClaimTypes.Email)
+                .First()
+                .Value;
+
+            if (identityUserEmail == null)
+            {
+                _logger.LogError("HttpContext.User can't have claim with null value of type ClaimTypes.Email");
+                return View("Error");
+            }
 
             var user = _dbContext.Users
-                .Where(u => u.Id == int.Parse(userId))
-                .Single();
+                .Where(u => u.Email == identityUserEmail)
+                .FirstOrDefault();
 
             return View(user);
         }
@@ -40,7 +51,7 @@ namespace Kinetic.WebUI.Controllers
             var user = _dbContext.Users
                 .Where(u => u.Id == userId)
                 .Single();
-            
+
             user.FirstName = firstName;
             user.LastName = lastName;
 

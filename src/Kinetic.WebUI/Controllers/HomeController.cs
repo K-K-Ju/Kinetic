@@ -16,18 +16,10 @@ namespace Kinetic.WebUI.Controllers
         }
 
         // GET: IndexController
-        public ActionResult Index()
+        [Authorize]
+        public IActionResult Index()
         {
-            var identityUserId = HttpContext.User.Claims
-                .Where(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier")
-                .First()
-                .Value;
-
-            var user = _dbContext.Users
-                .Where(u => u.IdentityId == identityUserId)
-                .FirstOrDefault();
-
-            return View(user);
+            return View();
         }
 
         // GET: IndexController/Details/5
