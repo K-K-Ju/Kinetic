@@ -3,14 +3,13 @@ using Microsoft.EntityFrameworkCore;
 using Kinetic.Core.Entities.Space;
 using Kinetic.Infrastructure.Data;
 using AutoMapper;
-using Kinetic.Application.TicketService.DTO;
-using Kinetic.Application.SpaceService.DTO;
+using Kinetic.Application.DTO;
 
 namespace Kinetic.WebUI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("space/")]
     [ApiController]
-    public class SpacesController : ControllerBase
+    public class SpacesController : Controller
     {
         private readonly KineticDbContext _context;
         private readonly IMapper _mapper;
@@ -21,7 +20,7 @@ namespace Kinetic.WebUI.Controllers
             _mapper = mapper;
         }
 
-        // GET: api/Spaces
+        // GET: spaces
         [HttpGet]
         public async Task<ActionResult<IEnumerable<SpaceDTO>>> GetSpaces()
         {
@@ -31,7 +30,7 @@ namespace Kinetic.WebUI.Controllers
             return Ok(spaceDTOs);
         }
 
-        // GET: api/Spaces/5
+        // GET: space/5
         [HttpGet("{id}")]
         public async Task<ActionResult<SpaceDTO>> GetSpace(int id)
         {
@@ -43,6 +42,13 @@ namespace Kinetic.WebUI.Controllers
             }
 
             return _mapper.Map<SpaceDTO>(space);
+        }
+
+        // GET: space/5/tickets
+        [HttpGet("{id}/tickets")]
+        public ActionResult<List<TicketDTO>> GetSpaceTickets(int id)
+        {
+            return ViewComponent("TicketList", id);
         }
 
         // POST: api/Spaces

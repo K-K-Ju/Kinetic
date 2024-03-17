@@ -1,13 +1,12 @@
 ﻿using AutoMapper;
-using Kinetic.Application.TicketService.DTO;
-using Kinetic.Application.SpaceService.DTO;
 using Kinetic.Core.Entities.Space;
+using Kinetic.Application.DTO;
 
 namespace Kinetic.WebUI
 {
     public class MapperProfile : Profile
     {
-        protected MapperProfile()
+        public MapperProfile()
         {
             CreateMap<Ticket, TicketDTO>().ReverseMap();
             CreateMap<Space, SpaceDTO>().ReverseMap();

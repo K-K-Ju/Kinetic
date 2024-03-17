@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Kinetic.Application.SpaceService.DTO;
+using Kinetic.Application.Abstraction;
+using Kinetic.Application.DTO;
 using Kinetic.Core.Entities.Space;
 using Kinetic.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -9,9 +10,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Kinetic.Application.SpaceService
+namespace Kinetic.Application.Services
 {
-    public class SpaceService
+    public class SpaceService : ISpaceService
     {
         private readonly KineticDbContext _dbContext;
         private readonly IMapper _mapper;
@@ -26,7 +27,7 @@ namespace Kinetic.Application.SpaceService
         {
             var space = _mapper.Map<Space>(spaceDTO);
             _dbContext.Spaces.Add(space);
-            return (await _dbContext.SaveChangesAsync()) == 1;
+            return await _dbContext.SaveChangesAsync() == 1;
         }
 
         public async Task<SpaceDTO?> GetSpaceById(int id)

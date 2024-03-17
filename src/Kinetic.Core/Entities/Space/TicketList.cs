@@ -11,9 +11,12 @@ namespace Kinetic.Core.Entities.Space
 
         public TicketList(Space space, SpaceBackLog spaceBackLog)
         {
-            this.Space = space;
+            Space = space;
             _spaceBackLog = spaceBackLog;
         }
+
+        public TicketList() : this(null, null)
+        { }
 
         public new void Add(Ticket ticket)
         {

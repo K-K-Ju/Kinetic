@@ -2,3 +2,8 @@
 // for details on configuring this project to bundle and minify static web assets.
 
 // Write your JavaScript code.
+
+
+function hide(elementIdentifier) {
+    document.getElementById(elementIdentifier).style.display = 'none';
+}

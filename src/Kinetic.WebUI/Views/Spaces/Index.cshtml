@@ -1,0 +1,10 @@
+﻿@using Kinetic.WebUI.ViewComponents
+@{
+    ViewData["Title"] = "Main page";
+}
+
+@model IQueryable<Task>
+
+<div class="container">
+    @Component.InvokeAsync("TicketList")
+</div>

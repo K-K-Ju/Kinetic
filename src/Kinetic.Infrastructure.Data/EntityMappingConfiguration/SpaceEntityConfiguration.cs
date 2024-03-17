@@ -25,7 +25,7 @@ namespace Kinetic.Infrastructure.Data.EntityMappingConfiguration
 
             builder
                 .HasMany(s => s.Tickets)
-                .WithOne()
+                .WithOne(t => t.RootSpace)
                 .IsRequired(false);
 
             builder

@@ -2,8 +2,8 @@
 using Microsoft.EntityFrameworkCore;
 using Kinetic.Core.Entities.Space;
 using Kinetic.Infrastructure.Data;
-using Kinetic.Application.TicketService.DTO;
 using AutoMapper;
+using Kinetic.Application.DTO;
 
 namespace Kinetic.WebUI.Controllers
 {

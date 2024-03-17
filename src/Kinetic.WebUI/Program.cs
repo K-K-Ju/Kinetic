@@ -3,9 +3,8 @@ using Kinetic.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations;
-using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Blazor;
 using Kinetic.WebUI;
+using Kinetic.Application;
 
 namespace Kinetic.WebUI
 {
@@ -22,17 +21,13 @@ namespace Kinetic.WebUI
             services.AddStorage(connectionString ?? string.Empty);
             services.AddIdentityStorage(connectionString ?? string.Empty);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddApplicationServices();
             services.AddAutoMapper(typeof(MapperProfile));
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                
                 .AddEntityFrameworkStores<UserIdentityDbContext>();
 
-            //services.AddAuthentication(options =>
-            //{
-            //    options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-            //})
-            //    .AddCookie();
+            services.AddLogging();
 
             services.AddControllersWithViews();
 

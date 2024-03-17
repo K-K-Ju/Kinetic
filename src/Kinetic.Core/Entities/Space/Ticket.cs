@@ -25,6 +25,9 @@
         public int CreatorId { get; set; }
         public virtual SpaceUser? AssignedTo { get; set; }
         public int AssignedToId { get; set; }
+        public Space RootSpace {  get; set; }        
+        public int SpaceId {  get; set; }
+
         public ICollection<Ticket> SubTasks { get; } = new List<Ticket>();
         public ICollection<Tag> Tags { get; } = new List<Tag>();
 
