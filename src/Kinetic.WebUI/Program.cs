@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Kinetic.WebUI;
 using Kinetic.Application;
+using Serilog;
 
 namespace Kinetic.WebUI
 {
@@ -16,13 +17,19 @@ namespace Kinetic.WebUI
             var services = builder.Services;
 
             string? connectionString = builder.Configuration.GetConnectionString("LocalDbSqlServer");
+            builder.Host.UseSerilog((context, loggerConfig) =>
+                loggerConfig.ReadFrom.Configuration(context.Configuration));
 
             services.AddHttpContextAccessor();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddStorage(connectionString ?? string.Empty);
             services.AddIdentityStorage(connectionString ?? string.Empty);
-            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddApplicationServices();
             services.AddAutoMapper(typeof(MapperProfile));
+            services.AddEndpointsApiExplorer();
+            services.AddSwaggerGen();
 
             services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
                 .AddEntityFrameworkStores<UserIdentityDbContext>();
@@ -33,13 +40,13 @@ namespace Kinetic.WebUI
 
             var app = builder.Build();
 
-            if (!app.Environment.IsDevelopment())
+            if (app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
-            else
-            { }
 
             await app.PrepareDataBaseAsync();
 
