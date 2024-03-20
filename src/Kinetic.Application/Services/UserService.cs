@@ -23,7 +23,7 @@ namespace Kinetic.Application.Services
             _logger = logger;
         }
 
-        public User? GetCurrentUser(HttpContext context)
+        public User GetCurrentUser(HttpContext context)
         {
             _logger.LogDebug("Retreieving current authenticated user.");
 
@@ -33,7 +33,7 @@ namespace Kinetic.Application.Services
             return (from user in _dbContext.Users
                     where user.Email == userEmail
                     select user)
-            .FirstOrDefault();
+            .Single();
         }
     }
 }

@@ -1,14 +1,10 @@
 ﻿using AutoMapper;
 using Kinetic.Application.Abstraction;
 using Kinetic.Application.DTO;
+using Kinetic.Core.Entities;
 using Kinetic.Core.Entities.Space;
 using Kinetic.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 
 namespace Kinetic.Application.Services
 {
@@ -16,18 +12,59 @@ namespace Kinetic.Application.Services
     {
         private readonly KineticDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly ILogger<SpaceService> _logger;
 
-        public SpaceService(KineticDbContext dbContext, IMapper mapper)
+
+        public SpaceService(
+            KineticDbContext dbContext,
+            IMapper mapper,
+            ILogger<SpaceService> logger)
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _logger = logger;
         }
 
-        public async Task<bool> CreateSpace(SpaceDTO spaceDTO)
+        public async Task<bool> CreateSpace(SpaceDTO spaceDTO, User creator)
         {
+
             var space = _mapper.Map<Space>(spaceDTO);
+            space.SpaceBackLog = new Core.Entities.Space.BackLog.SpaceBackLog();
+            space.Owner = creator;
+            space.OwnerId = creator.Id;
+
+            var transaction = _dbContext.Database.BeginTransaction();
+
             _dbContext.Spaces.Add(space);
-            return await _dbContext.SaveChangesAsync() == 1;
+            
+            var role = new Role() { Name = "No role" };
+            _dbContext.Roles.Add(role);
+            space.Roles.Add(role);
+
+            var spaceUser = new SpaceUser()
+            {
+                User = creator,
+                Space = space,
+                SpaceId = space.Id,
+                SpaceUserRole = role,
+                SpaceUserRoleId = role.Id,
+            };
+
+            _dbContext.SpaceUsers.Add(spaceUser);
+
+            await _dbContext.SaveChangesAsync();
+
+            try
+            {
+                transaction.Commit();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                transaction.Rollback();
+                _logger.LogError("Failed to create space\n{msg}", ex.Message);
+                return false;
+            }
         }
 
         public async Task<SpaceDTO?> GetSpaceById(int id)

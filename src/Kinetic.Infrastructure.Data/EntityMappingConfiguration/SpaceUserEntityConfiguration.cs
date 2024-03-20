@@ -13,12 +13,13 @@ namespace Kinetic.Infrastructure.Data.EntityMappingConfiguration
 
             builder
                 .HasOne(su => su.User)
-                .WithMany()
-                .HasForeignKey(su => su.Id)
+                .WithMany(u => u.SpaceUsers)
+                .HasForeignKey(su => su.UserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder
                 .Navigation(su => su.User)
+                .EnableLazyLoading()
                 .IsRequired();
 
             builder
@@ -35,9 +36,9 @@ namespace Kinetic.Infrastructure.Data.EntityMappingConfiguration
                 .OnDelete(DeleteBehavior.NoAction);
 
             builder
-                .HasOne(x => x.UserRole)
+                .HasOne(x => x.SpaceUserRole)
                 .WithOne()
-                .HasForeignKey<SpaceUser>(x => x.UserRoleId)
+                .HasForeignKey<SpaceUser>(x => x.SpaceUserRoleId)
                 .IsRequired(false)
                 .OnDelete(DeleteBehavior.NoAction);
         }

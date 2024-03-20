@@ -1,4 +1,5 @@
 ﻿using Kinetic.Application.DTO;
+using Kinetic.Core.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,6 @@ namespace Kinetic.Application.Abstraction
 {
     public interface ISpaceService
     {
-        Task<bool> CreateSpace(SpaceDTO spaceDTO);
+        Task<bool> CreateSpace(SpaceDTO spaceDTO, User creator);
     }
 }

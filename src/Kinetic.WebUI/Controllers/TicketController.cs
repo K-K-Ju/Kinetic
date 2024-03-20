@@ -7,27 +7,17 @@ using Kinetic.Application.DTO;
 
 namespace Kinetic.WebUI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("tickets")]
     [ApiController]
-    public class TicketsController : ControllerBase
+    public class TicketController : ControllerBase
     {
         private readonly KineticDbContext _dbContext;
         private readonly IMapper _mapper;
 
-        public TicketsController(KineticDbContext context, IMapper mapper)
+        public TicketController(KineticDbContext context, IMapper mapper)
         {
             _dbContext = context;
             _mapper = mapper;
-        }
-
-        // GET: api/Tickets
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<TicketDTO>>> GetTickets()
-        {
-            var tickets = await _dbContext.Tickets.ToListAsync();
-            var ticketsDTO = _mapper.Map<List<Ticket>, List<TicketDTO>>(tickets);
-            
-            return Ok(ticketsDTO);
         }
 
         // GET: api/Tickets/5
@@ -80,18 +70,16 @@ namespace Kinetic.WebUI.Controllers
             return NoContent();
         }
 
-        // POST: api/Tickets
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // POST: tickets/
         [HttpPost]
-        public async Task<ActionResult<TicketDTO>> PostTicket(TicketDTO ticketDTO)
+        public async Task<int> PostTicket(TicketDTO ticketDTO)
         {
             var ticket = _mapper.Map<Ticket>(ticketDTO);
             _dbContext.Tickets.Add(ticket);
             await _dbContext.SaveChangesAsync();
 
-            return CreatedAtAction("GetTicket", new { id = ticketDTO.Id }, ticketDTO);
+            return 200;
         }
-
         // DELETE: api/Tickets/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTicket(int id)

@@ -10,6 +10,6 @@ namespace Kinetic.Application.Abstraction
 {
     public interface IUserService
     {
-        User? GetCurrentUser(HttpContext context);
+        User GetCurrentUser(HttpContext context);
     }
 }

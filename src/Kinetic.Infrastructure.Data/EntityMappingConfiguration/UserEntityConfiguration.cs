@@ -13,6 +13,11 @@ namespace Kinetic.Infrastructure.Data.EntityMappingConfiguration
             builder
                 .HasMany(x => x.Spaces)
                 .WithOne(x => x.Owner);
+
+            builder
+                .HasMany(x => x.SpaceUsers)
+                .WithOne(su => su.User)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

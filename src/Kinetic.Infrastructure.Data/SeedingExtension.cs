@@ -59,8 +59,7 @@ namespace Kinetic.Infrastructure.Data
                 {
                     Name = "Test",
                     Owner = user,
-                    OwnerId = user.Id,
-                    CreatedAt = DateTime.Now
+                    OwnerId = user.Id
                 };
 
                 space.Roles.Add(roles[0]);
@@ -68,12 +67,12 @@ namespace Kinetic.Infrastructure.Data
 
                 SpaceUser spaceUser = new SpaceUser()
                 {
-                    Id = user.Id,
                     Space = space,
                     SpaceId = space.Id,
                     User = user,
-                    UserRole = roles.ElementAt(0),
-                    UserRoleId = roles.ElementAt(0).Id
+                    UserId = user.Id,
+                    SpaceUserRole = roles.ElementAt(0),
+                    SpaceUserRoleId = roles.ElementAt(0).Id
                 };
 
                 dbContext.Roles.Add(roles[0]);

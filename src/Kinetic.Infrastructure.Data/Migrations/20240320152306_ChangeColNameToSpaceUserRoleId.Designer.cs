@@ -4,6 +4,7 @@ using Kinetic.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Kinetic.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(KineticDbContext))]
-    partial class KineticDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240320152306_ChangeColNameToSpaceUserRoleId")]
+    partial class ChangeColNameToSpaceUserRoleId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

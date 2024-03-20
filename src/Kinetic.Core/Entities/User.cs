@@ -11,8 +11,6 @@ namespace Kinetic.Core.Entities
         public string IdentityId { get; set; }
 
         public ICollection<Space.Space> Spaces { get; } = new List<Space.Space>();
-
-        public User() : base()
-        { }
+        public ICollection<Space.SpaceUser> SpaceUsers { get; } = new List<Space.SpaceUser>();
     }
 }

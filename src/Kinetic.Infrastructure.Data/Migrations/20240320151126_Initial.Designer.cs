@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Kinetic.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(KineticDbContext))]
-    [Migration("20240310001742_Initial")]
+    [Migration("20240320151126_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -21,7 +21,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("application")
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -155,9 +155,15 @@ namespace Kinetic.Infrastructure.Data.Migrations
             modelBuilder.Entity("Kinetic.Core.Entities.Space.SpaceUser", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
                     b.Property<int>("SpaceId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.Property<int>("UserRoleId")
@@ -166,6 +172,8 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("SpaceId");
+
+                    b.HasIndex("UserId");
 
                     b.HasIndex("UserRoleId")
                         .IsUnique();
@@ -212,7 +220,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     b.Property<int>("Priority")
                         .HasColumnType("int");
 
-                    b.Property<int?>("SpaceId")
+                    b.Property<int>("SpaceId")
                         .HasColumnType("int");
 
                     b.Property<int?>("TicketId")
@@ -332,16 +340,16 @@ namespace Kinetic.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Kinetic.Core.Entities.Space.SpaceUser", b =>
                 {
-                    b.HasOne("Kinetic.Core.Entities.User", "User")
-                        .WithMany()
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Kinetic.Core.Entities.Space.Space", "Space")
                         .WithMany("SpaceUsers")
                         .HasForeignKey("SpaceId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Kinetic.Core.Entities.User", "User")
+                        .WithMany("SpaceUsers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("Kinetic.Core.Entities.Space.Role", "UserRole")
@@ -376,7 +384,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Kinetic.Core.Entities.Space.Space", null)
+                    b.HasOne("Kinetic.Core.Entities.Space.Space", "RootSpace")
                         .WithMany("Tickets")
                         .HasForeignKey("SpaceId");
 
@@ -388,6 +396,8 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     b.Navigation("AssignedTo");
 
                     b.Navigation("Creator");
+
+                    b.Navigation("RootSpace");
                 });
 
             modelBuilder.Entity("Kinetic.Core.Entities.Space.Restrictions.TagRestriction", b =>
@@ -437,6 +447,8 @@ namespace Kinetic.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("Kinetic.Core.Entities.User", b =>
                 {
+                    b.Navigation("SpaceUsers");
+
                     b.Navigation("Spaces");
                 });
 #pragma warning restore 612, 618

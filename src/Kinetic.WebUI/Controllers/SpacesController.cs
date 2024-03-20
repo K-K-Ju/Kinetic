@@ -4,19 +4,26 @@ using Kinetic.Core.Entities.Space;
 using Kinetic.Infrastructure.Data;
 using AutoMapper;
 using Kinetic.Application.DTO;
+using Kinetic.Application.Abstraction;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Kinetic.WebUI.Controllers
 {
     [Route("space/")]
     [ApiController]
+    [Authorize]
     public class SpacesController : Controller
     {
         private readonly KineticDbContext _context;
+        private readonly ISpaceService _spaceService;
+        private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public SpacesController(KineticDbContext context, IMapper mapper)
+        public SpacesController(KineticDbContext context, ISpaceService spaceService, IUserService userService, IMapper mapper)
         {
             _context = context;
+            _spaceService = spaceService;
+            _userService = userService;
             _mapper = mapper;
         }
 
@@ -51,18 +58,20 @@ namespace Kinetic.WebUI.Controllers
             return ViewComponent("TicketList", id);
         }
 
-        // POST: api/Spaces
-        [HttpPost]
-        public async Task<ActionResult<Space>> PostSpace(SpaceDTO spaceDTO)
+        // POST: space/create
+        [HttpGet("create")]
+        public ActionResult CreateSpace()
         {
-            var space = _mapper.Map<Space>(spaceDTO);
-            _context.Spaces.Add(space);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetSpaces), new { id = space.Id }, space);
+            return View("Create");
         }
 
-        // DELETE: api/Spaces/5
+        [HttpPost("create")]
+        public async Task<bool> PostSpace([FromForm]string spaceName)
+        {
+            return await _spaceService.CreateSpace(new SpaceDTO() { Name = spaceName }, _userService.GetCurrentUser(HttpContext));
+        }
+
+        // DELETE: space/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteSpace(int id)
         {

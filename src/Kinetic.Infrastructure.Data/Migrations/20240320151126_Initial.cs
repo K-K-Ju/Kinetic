@@ -123,7 +123,9 @@ namespace Kinetic.Infrastructure.Data.Migrations
                 schema: "application",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false),
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    UserId = table.Column<int>(type: "int", nullable: false),
                     UserRoleId = table.Column<int>(type: "int", nullable: false),
                     SpaceId = table.Column<int>(type: "int", nullable: false)
                 },
@@ -144,12 +146,11 @@ namespace Kinetic.Infrastructure.Data.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_SpaceUsers_Users_Id",
-                        column: x => x.Id,
+                        name: "FK_SpaceUsers_Users_UserId",
+                        column: x => x.UserId,
                         principalSchema: "application",
                         principalTable: "Users",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
@@ -165,7 +166,7 @@ namespace Kinetic.Infrastructure.Data.Migrations
                     Priority = table.Column<int>(type: "int", nullable: false),
                     CreatorId = table.Column<int>(type: "int", nullable: false),
                     AssignedToId = table.Column<int>(type: "int", nullable: false),
-                    SpaceId = table.Column<int>(type: "int", nullable: true),
+                    SpaceId = table.Column<int>(type: "int", nullable: false),
                     TicketId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
@@ -289,6 +290,12 @@ namespace Kinetic.Infrastructure.Data.Migrations
                 schema: "application",
                 table: "SpaceUsers",
                 column: "SpaceId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_SpaceUsers_UserId",
+                schema: "application",
+                table: "SpaceUsers",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_SpaceUsers_UserRoleId",

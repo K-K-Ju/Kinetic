@@ -21,7 +21,7 @@
                 <a class="nav-link space-link" aria-current="page">
                     <svg class="bi me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
                     @spaceDTO.Name
-                    <p id="hidden-id" style="display:none">@spaceDTO.Id</p>
+                    <p class="hidden-id" style="display:none">@spaceDTO.Id</p>
                 </a>
             </li>
         }
@@ -40,14 +40,13 @@
         </ul>
     </div>
 </div>
-<div id="ticket-list-container">
-
-</div>
 
 <script>
     $('.space-link').click(function (event) {
         console.log("clicked")
-        spaceId = $("#hidden-id")[0].innerText
+        console.log(event)
+
+        spaceId = event.target.getElementsByTagName("p")[0].innerText
         url = "/space/" + spaceId + "/tickets"
         $.get(url, function (data) {
             $("#ticket-list-container").html(data);
