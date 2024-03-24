@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Kinetic.WebUI;
 using Kinetic.Application;
+using Kinetic.IdentityServer;
 using Serilog;
 
 namespace Kinetic.WebUI
@@ -19,24 +20,23 @@ namespace Kinetic.WebUI
             string? connectionString = builder.Configuration.GetConnectionString("LocalDbSqlServer");
             builder.Host.UseSerilog((context, loggerConfig) =>
                 loggerConfig.ReadFrom.Configuration(context.Configuration));
+            services.AddLogging();
 
             services.AddHttpContextAccessor();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddStorage(connectionString ?? string.Empty);
-            services.AddIdentityStorage(connectionString ?? string.Empty);
+            //services.AddIdentityStorage(connectionString ?? string.Empty);
 
             services.AddApplicationServices();
             services.AddAutoMapper(typeof(MapperProfile));
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
-
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<UserIdentityDbContext>();
-
-            services.AddLogging();
-
             services.AddControllersWithViews();
+
+            builder.ConfigureIdentityServerServices();
+            //services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            //    .AddEntityFrameworkStores<UserIdentityDbContext>();
 
             var app = builder.Build();
 
@@ -55,7 +55,8 @@ namespace Kinetic.WebUI
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
+            app.ConfigurePipeline();
             app.MapRazorPages();
 
             app.MapControllerRoute(
